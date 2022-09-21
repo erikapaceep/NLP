@@ -3,24 +3,37 @@ import math
 from scipy.stats import entropy
 from fractions import Fraction
 
-s1 = "<s> <s> This is the rat that ate the malt that lay in the house that Jack built </s>"
-s2 = "mary"
+
+def jaccard_coef(string1,string2,ngram):
+    """
+    This function compute the jaccard coefficient between two strings
+    Args:
+        The function requires two strings string1 and string2
+        The function requires the n-gram which can be unigram, bigram or trigram
+
+    Return:
+        The function return the jaccard coefficient between the two strings
+    """
+    jaccard_coef = len(intersection((ngram(string1)), ngram(string2))) / len(union((ngram(string1)), ngram(string2)))
+    return round(jaccard_coef,3)
+
 
 def count_unique_word(string):
     s1_split = set(s1.split(" "))
     return s1_split
 
-print('vocabulary size including <s>,</s>:', count_unique_word(s1))
-print(len(count_unique_word(s1)))
+
+
+def unigram(string):
+    return list(string.lower().split(" "))
 
 def bigram(string):
-    s1_list = []
-    s1_split = list(s1.split(" "))
-    for i in range(0,len(s1_split)-1):
-        x = s1_split[i] + " " +s1_split[i+1]
-        s1_list.append(x)
-    return s1_list
-print(bigram(s1))
+    s_list = []
+    str_split = list(string.split(" "))
+    for i in range(0,len(str_split)-1):
+        x = str_split[i] + " " + str_split[i+1]
+        s_list.append(x)
+    return s_list
 
 
 def trigram(string):
@@ -43,20 +56,18 @@ def trigram(string):
             s1_list.append(x)
     return s1_list
 
-print(trigram(s1))
-print(bigram(s2))
 
 def intersection(lst1,lst2):
-    lst3 = [value for value in lst1 if value in lst2]
-    return lst3
+    intersection_lst = [value for value in lst1 if value in lst2]
+    return intersection_lst
 
 def union(lst1,lst2):
-    lst4 = list(set(lst1)|set(lst2))
-    return lst4
+    union_lst = list(set(lst1)|set(lst2))
+    return union_lst
 
-print(intersection((bigram(s1)),bigram(s2)))
-print(union((bigram(s1)),bigram(s2)))
 
-jaccard = len(intersection((bigram(s1)),bigram(s2)))/len(union((bigram(s1)),bigram(s2)))
-print("Jaccard coefficient = ",len(intersection((bigram(s1)),bigram(s2)))/len(union((bigram(s1)),bigram(s2))))
-print(round(jaccard,3))
+if __name__ == "__main__":
+    s1 = "What is your name?"
+    s2 = "Erika, and what is yours?"
+    print(jaccard_coef(s1,s2,unigram))
+
